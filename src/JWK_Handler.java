@@ -192,6 +192,13 @@ public class JWK_Handler {
 		
 	}
 	
+	/**
+	 * Returns a JSONArray of JWK-Compliant JSONObjects containing relevant Certificate information.
+	 * 
+	 * @param certs A List of Certificates to parse
+	 * @return jsonAry the formatted JSON Array of JSONObjects representing the Certificates
+	 * @throws CertificateException if any certificate is missing, invalid or otherwise unparseable
+	 */
 	public JSONArray formatCertificates(List<Certificate> certs) throws CertificateException {
 		
 		JSONArray jsonAry = new JSONArray();
@@ -207,6 +214,7 @@ public class JWK_Handler {
 		return jsonAry;
 	}
 	
+	// Extract the Keytype parameter from a Certificate
 	private String extractKty(Certificate cert) {
 		PublicKey pk = cert.getPublicKey();
 		
@@ -227,6 +235,8 @@ public class JWK_Handler {
 		return kty;
 	}
 	
+	// Extract the Algorithm parameter from a Certificate
+	// Uses the OID_MAP to get a JWK-compliant string representation
 	private String extractAlg(X509Certificate cert) {
 		if(cert == null) return null;
 		
@@ -240,6 +250,8 @@ public class JWK_Handler {
 		return alg;
 	}
 	
+	// Extract the Key Use parameter from a Certificate
+	//  Can be 'sig', 'enc' or 'dec' (or a combination separated by ', ')
 	private String extractUse(X509Certificate cert) {
 		if(cert == null) return null;
 		
@@ -254,6 +266,7 @@ public class JWK_Handler {
         return use;
 	}
 	
+	// Extracts the URL-safe Base64 encoded Modulus from a Certificate
 	private String extractModulus(X509Certificate cert, String kty) {
 		if(cert == null || kty == null) return null;
 		
@@ -269,6 +282,7 @@ public class JWK_Handler {
 		return mod;
 	}
 	
+	// Extracts the URL-safe Base64 encoded Exponent from a Certificate
 	private String extractExponent(X509Certificate cert, String kty) {
 		if(cert == null || kty == null) return null;
 		
