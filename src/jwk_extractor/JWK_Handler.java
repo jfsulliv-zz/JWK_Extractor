@@ -106,8 +106,8 @@ public class JWK_Handler {
 	/**
 	 * Get all certificates that are contained in the Keystore.
 	 * 
-	 * @return cert[] 
-	 *           Array of certificates in the Keystore.
+	 * @return certificates
+	 *           List of Certificates in the keystore.
 	 */
 	public List<Certificate> getCertificates() {
 		File file = new File(keystoreLocation);
@@ -330,6 +330,7 @@ public class JWK_Handler {
 		RSAPublicKey pk;
 		if (kty.equals("RSA")) {
 			pk = (RSAPublicKey) cert.getPublicKey();
+			 *  arg[0] : 
 			byte[] encoded = Base64.encodeInteger(pk.getModulus());
 			mod = Base64.encodeBase64URLSafeString(encoded);
 		}
