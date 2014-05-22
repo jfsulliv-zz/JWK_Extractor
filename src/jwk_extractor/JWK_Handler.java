@@ -1,4 +1,5 @@
 package jwk_extractor;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.codec.binary.Base64;
@@ -27,29 +28,29 @@ import java.util.Map;
 /**
  * Handles extraction of PKI Certificate data from a KeyStore, and formatting
  * this data into JWK-compliant JSON format.
- *  Can extract information from multiple certificates to create a JSONArray.
- *  <p>
- *  
+ * Can extract information from multiple certificates to create a JSONArray.
+ * <p>
+ * 
  * OUTPUT FORMAT
- *  { "keys":
- *   [ 
- *    { "kty": key_type,
- *      "alg": algorithm,
- *      "use": key_usage,
- *      "n"  : key_modulus,
- *      "e"  : key_exponent
- *    }+
- *   ]
- *  }
- *  <p>
+ * { "keys":
+ *  [
+ *   { "kty": key_type,
+ *   "alg": algorithm,
+ *   "use": key_usage,
+ *   "n" : key_modulus,
+ *   "e" : key_exponent
+ *   }+
+ *  ]
+ * }
+ * <p>
  * 
  * SPECIFICATIONS
- *  JWK - JSON Web Key -
- *    http://self-issued.info/docs/draft-ietf-jose-json-web-key.html 
- *  JWA - JSON Web Algorithm - 
- *   http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-26
- * X509 - PKI Certificate - 
- *  http://tools.ietf.org/html/rfc5280
+ * JWK - JSON Web Key -
+ * http://self-issued.info/docs/draft-ietf-jose-json-web-key.html
+ * JWA - JSON Web Algorithm -
+ * http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-26
+ * X509 - PKI Certificate -
+ * http://tools.ietf.org/html/rfc5280
  * 
  * 
  * @author james
@@ -58,9 +59,10 @@ import java.util.Map;
 public class JWK_Handler {
 	private final Map<String, String> OID_MAP = new HashMap<String, String>();
 
-	/* Parameter values for the kty field that are defined by the JWK spec
-	*   Ref. to http://self-issued.info/docs/draft-ietf-jose-json-web-key.html 
-	*/
+	/*
+	 * Parameter values for the kty field that are defined by the JWK spec
+	 * Ref. to http://self-issued.info/docs/draft-ietf-jose-json-web-key.html
+	 */
 	private static final String[] KTY_SPEC = { "EC", "RSA", "oct" };
 
 	private final String keystoreLocation;
@@ -68,8 +70,10 @@ public class JWK_Handler {
 
 	/*
 	 * Maps Signature Algorithm Object ID values with a human-readable (JWK
-	 * Compliant) string 
-	 *  Ref. to http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-26#appendix-A.1
+	 * Compliant) string
+	 * Ref. to
+	 * http://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-26#
+	 * appendix-A.1
 	 */
 	private void setup_OID_MAP() {
 		OID_MAP.put("1.2.840.113549.2.9", "HS256");
@@ -88,8 +92,10 @@ public class JWK_Handler {
 	 * Constructor for a JWK_Handler to extract PKI Certificate information from
 	 * a KeyStore.
 	 * 
-	 * @param keystoreLocation  The relative file location of the keystore.
-	 * @param passwd  The password associated with the keystore.
+	 * @param keystoreLocation
+	 *            The relative file location of the keystore.
+	 * @param passwd
+	 *            The password associated with the keystore.
 	 */
 	public JWK_Handler(String keystoreLocation, String passwd) {
 		this.keystoreLocation = keystoreLocation;
@@ -100,7 +106,8 @@ public class JWK_Handler {
 	/**
 	 * Get all certificates that are contained in the Keystore.
 	 * 
-	 * @return  cert[] Array of certificates in the Keystore.
+	 * @return cert[] 
+	 *           Array of certificates in the Keystore.
 	 */
 	public List<Certificate> getCertificates() {
 		File file = new File(keystoreLocation);
@@ -145,10 +152,11 @@ public class JWK_Handler {
 	/**
 	 * Get the certificate referred to by alias, if it is in the KeyStore.
 	 * 
-	 * @param  alias
-	 *            a string alias for the given KeyStore entry
-	 * @return  cert the certificate that is referred to by alias or null if it
-	 *            does not exist
+	 * @param alias
+	 *           A string alias for the given KeyStore entry
+	 * @return cert 
+	 *          The certificate that is referred to by alias or null if it
+	 *          does not exist
 	 */
 	public Certificate getCertificate(String alias) {
 		File file = new File(keystoreLocation);
@@ -194,11 +202,12 @@ public class JWK_Handler {
 	 * Returns a JWK-Compliant JSONObject containing relevant Certificate
 	 * information.
 	 * 
-	 * @return jsonFmt  The JSONObject containing relevant Certificate
-	 *         information.
+	 * @return jsonFmt 
+	 *           The JSONObject containing relevant Certificate
+	 *           information.
 	 * @throws CertificateException
-	 *             if the certificate is missing, invalid or otherwise
-	 *             unparseable
+	 *           if the certificate is missing, invalid or otherwise
+	 *           unparseable
 	 */
 	public JSONObject formatCertificate(Certificate cert)
 			throws CertificateException {
@@ -230,11 +239,12 @@ public class JWK_Handler {
 	 * 
 	 * @param certs
 	 *            A List of Certificates to parse
-	 * @return jsonAry  the formatted JSON Array of JSONObjects representing the
+	 * @return jsonAry 
+	 *           the formatted JSON Array of JSONObjects representing the
 	 *           Certificates
 	 * @throws CertificateException
-	 *             if any certificate is missing, invalid or otherwise
-	 *             unparseable
+	 *           if any certificate is missing, invalid or otherwise
+	 *           unparseable
 	 */
 	public JSONArray formatCertificates(List<Certificate> certs)
 			throws CertificateException {
