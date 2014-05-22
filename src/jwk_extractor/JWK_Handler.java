@@ -1,3 +1,4 @@
+package jwk_extractor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.apache.commons.codec.binary.Base64;
