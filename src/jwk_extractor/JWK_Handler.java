@@ -330,7 +330,6 @@ public class JWK_Handler {
 		RSAPublicKey pk;
 		if (kty.equals("RSA")) {
 			pk = (RSAPublicKey) cert.getPublicKey();
-			 *  arg[0] : 
 			byte[] encoded = Base64.encodeInteger(pk.getModulus());
 			mod = Base64.encodeBase64URLSafeString(encoded);
 		}
