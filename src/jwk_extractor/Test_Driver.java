@@ -1,4 +1,6 @@
 package jwk_extractor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -25,7 +27,17 @@ public class Test_Driver {
 
 		JWK_Handler j = new JWK_Handler(args[0], PASS);
 
-		ArrayList<Certificate> certs = (ArrayList<Certificate>) j.getCertificates();
+		ArrayList<Certificate> certs = null;
+		try {
+			certs = (ArrayList<Certificate>) j.getCertificates();
+			if(certs == null) System.exit(1);
+		} catch(FileNotFoundException e){ 
+			System.err.println("Error on file: " + e.getMessage());
+			System.exit(1);
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		}
 		try {
 			JSONArray fmtCerts = j.formatCertificates(certs);
 			String fmt = fmtCerts.toJSONString();

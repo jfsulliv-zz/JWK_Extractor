@@ -109,15 +109,9 @@ public class JWK_Handler {
 	 * @return certificates
 	 *           List of Certificates in the keystore.
 	 */
-	public List<Certificate> getCertificates() {
+	public List<Certificate> getCertificates() throws IOException, FileNotFoundException {
 		File file = new File(keystoreLocation);
-		FileInputStream is;
-		try {
-			is = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			System.err.println(e.toString());
-			return null;
-		}
+		FileInputStream is = new FileInputStream(file);
 
 		ArrayList<Certificate> certs = new ArrayList<Certificate>();
 
@@ -132,16 +126,13 @@ public class JWK_Handler {
 				certs.add(cert);
 			}
 		} catch (KeyStoreException e) {
-			System.err.println(e.toString());
+			System.err.println("Failed to load the keystore.");
 			return null;
 		} catch (NoSuchAlgorithmException e) {
-			System.err.println(e.toString());
+			System.err.println("Algorithm to check the integrity of the keystore not found.");
 			return null;
 		} catch (CertificateException e) {
-			System.err.println(e.toString());
-			return null;
-		} catch (IOException e) {
-			System.err.println(e.toString());
+			System.err.println("Failed to load a certificate in the keystore.");
 			return null;
 		}
 
@@ -158,15 +149,9 @@ public class JWK_Handler {
 	 *          The certificate that is referred to by alias or null if it
 	 *          does not exist
 	 */
-	public Certificate getCertificate(String alias) {
+	public Certificate getCertificate(String alias) throws IOException, FileNotFoundException {
 		File file = new File(keystoreLocation);
-		FileInputStream is;
-		try {
-			is = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			System.err.println(e.toString());
-			return null;
-		}
+		FileInputStream is = new FileInputStream(file);
 
 		Certificate cert = null;
 		try {
@@ -182,16 +167,13 @@ public class JWK_Handler {
 
 			}
 		} catch (KeyStoreException e) {
-			System.err.println(e.toString());
+			System.err.println("Failed to load the keystore.");
 			return null;
 		} catch (NoSuchAlgorithmException e) {
-			System.err.println(e.toString());
+			System.err.println("Algorithm to check the integrity of the keystore not found.");
 			return null;
 		} catch (CertificateException e) {
-			System.err.println(e.toString());
-			return null;
-		} catch (IOException e) {
-			System.err.println(e.toString());
+			System.err.println("Failed to load a certificate in the keystore.");
 			return null;
 		}
 
@@ -211,6 +193,7 @@ public class JWK_Handler {
 	 */
 	public JSONObject formatCertificate(Certificate cert)
 			throws CertificateException {
+		if(cert == null) return null;
 
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		ByteArrayInputStream bis = new ByteArrayInputStream(cert.getEncoded());
@@ -248,6 +231,7 @@ public class JWK_Handler {
 	 */
 	public JSONArray formatCertificates(List<Certificate> certs)
 			throws CertificateException {
+		if(certs == null) return null;
 
 		JSONArray jsonAry = new JSONArray();
 		jsonAry.add("keys");
@@ -264,6 +248,8 @@ public class JWK_Handler {
 
 	// Extract the Keytype parameter from a Certificate
 	private String extractKty(Certificate cert) {
+		if(cert == null) return null;
+		
 		PublicKey pk = cert.getPublicKey();
 
 		String kty = "";
@@ -286,8 +272,7 @@ public class JWK_Handler {
 	// Extract the Algorithm parameter from a Certificate
 	// Uses the OID_MAP to get a JWK-compliant string representation
 	private String extractAlg(X509Certificate cert) {
-		if (cert == null)
-			return null;
+		if (cert == null) return null;
 
 		String alg = "";
 
@@ -302,8 +287,7 @@ public class JWK_Handler {
 	// Extract the Key Use parameter from a Certificate
 	// Can be 'sig', 'enc' or 'dec' (or a combination separated by ', ')
 	private String extractUse(X509Certificate cert) {
-		if (cert == null)
-			return null;
+		if (cert == null) return null;
 
 		String use = "";
 		boolean[] keyUsage = cert.getKeyUsage();
@@ -322,8 +306,7 @@ public class JWK_Handler {
 
 	// Extracts the URL-safe Base64 encoded Modulus from a Certificate
 	private String extractModulus(X509Certificate cert, String kty) {
-		if (cert == null || kty == null)
-			return null;
+		if (cert == null || kty == null) return null;
 
 		String mod = "";
 
@@ -339,8 +322,7 @@ public class JWK_Handler {
 
 	// Extracts the URL-safe Base64 encoded Exponent from a Certificate
 	private String extractExponent(X509Certificate cert, String kty) {
-		if (cert == null || kty == null)
-			return null;
+		if (cert == null || kty == null) return null;
 
 		String exp = "";
 
